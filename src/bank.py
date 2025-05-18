@@ -19,7 +19,6 @@ class Bank:
         if (
             numero_conta in self.contas
             and valor >= 0
-            and self.contas[numero_conta].saldo >= valor
         ):
             self.contas[numero_conta].saldo -= valor
             return True
