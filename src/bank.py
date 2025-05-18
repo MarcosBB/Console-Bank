@@ -24,3 +24,18 @@ class Bank:
             self.contas[numero_conta].saldo -= valor
             return True
         return False
+
+    def transferencia(self, conta_origem, conta_destino, valor):
+        if conta_origem not in self.contas or conta_destino not in self.contas:
+            return False
+        if valor < 0:
+            return False
+        
+        if self.debitar(conta_origem, valor):
+            if self.creditar(conta_destino, valor):
+                return True
+            else:
+                self.creditar(conta_origem, valor)
+        return False
+
+
