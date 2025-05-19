@@ -36,5 +36,10 @@ class Bank:
             else:
                 self.creditar(conta_origem, valor)
         return False
+    
+    def consultar_saldo(self, numero_conta):
+        if numero_conta in self.contas:
+            return self.contas[numero_conta].saldo
+        return None
 
 

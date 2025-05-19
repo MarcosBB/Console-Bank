@@ -21,7 +21,7 @@ class MainScreen(BaseScreen):
         self.atualizar_info()
 
     def atualizar_info(self):
-        # self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
+        self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
         self.conta_label.update(f"Conta: {self.app.current_account}")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
