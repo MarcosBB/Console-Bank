@@ -1,20 +1,24 @@
 from textual.widgets import Button, Label
-from textual.containers import Horizontal
+from textual.containers import Vertical, Horizontal
 from .base_screen import BaseScreen
 
 class MainScreen(BaseScreen):
     def content(self):
-        self.saldo_label = Label("")
-        self.conta_label = Label("")
+        self.saldo_label = Label("", id="saldo")
+        self.conta_label = Label("", id="conta")
 
-        yield Label("Menu Principal")
-        yield self.saldo_label
-        yield self.conta_label
-        yield Horizontal(
-            Button("Depositar", id="depositar"),
-            Button("Sacar", id="sacar"),
-            Button("Transferir", id="transferir"),
-            Button("Voltar", id="voltar"),
+        yield Vertical(
+            Label("💰 Menu Principal", id="titulo"),
+            self.saldo_label,
+            self.conta_label,
+            Horizontal(
+                Button("Depositar", id="depositar"),
+                Button("Sacar", id="sacar"),
+                Button("Transferir", id="transferir"),
+                Button("Voltar", id="voltar"),
+                id="botoes"
+            ),
+            id="container_principal"
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

@@ -1,14 +1,18 @@
 from textual.widgets import Button, Label, Input
+from textual.containers import Vertical, Horizontal
 from .base_screen import BaseScreen
-from textual.containers import Horizontal
 
 class LoginScreen(BaseScreen):
     def content(self):
-        yield Label("Login")
-        yield Input(placeholder="Número da conta", id="numero_conta")
-        yield Horizontal(
-            Button("Entrar", id="entrar"),
-            Button("Cadastrar nova conta", id="cadastrar"),
+        yield Vertical(
+            Label("🔐 Login", id="titulo"),
+            Input(placeholder="Número da conta", id="numero_conta"),
+            Horizontal(
+                Button("Entrar", id="entrar"),
+                Button("Cadastrar nova conta", id="cadastrar"),
+                id="botoes"
+            ),
+            id="container_principal"
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
