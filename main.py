@@ -1,4 +1,8 @@
 from src import Bank
+from src import FrontendApp
 
-
-banco = Bank()
+bank = Bank()
+bank.criar_conta(1)
+bank.criar_conta(2)
+frontend_app = FrontendApp(bank)
+frontend_app.run()
