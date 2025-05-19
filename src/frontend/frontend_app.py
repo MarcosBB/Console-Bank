@@ -13,6 +13,8 @@ class FrontendApp(App):
         "deposito": screens.DepositoScreen,
         "saque": screens.SaqueScreen,
         "transferencia": screens.TransferenciaScreen,
+        "login": screens.LoginScreen,
+        "cadastro": screens.CadastroScreen,
     }
 
     def __init__(self, bank) -> None:
@@ -21,6 +23,6 @@ class FrontendApp(App):
         self.current_account = 1
 
     def on_mount(self) -> None:
-        self.switch_mode("main")
+        self.switch_mode("login")
 
 

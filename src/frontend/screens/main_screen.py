@@ -26,7 +26,7 @@ class MainScreen(BaseScreen):
             case "transferir":
                 self.app.switch_mode("transferencia")
             case "voltar":
-                self.app.switch_mode("main")
+                self.app.switch_mode("login")
 
     def on_mount(self) -> None:
         self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
