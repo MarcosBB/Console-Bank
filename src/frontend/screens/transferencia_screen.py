@@ -1,15 +1,19 @@
 from textual.widgets import Button, Label, Input
+from textual.containers import Vertical, Horizontal
 from .base_screen import BaseScreen
-from textual.containers import Horizontal
 
 class TransferenciaScreen(BaseScreen):
     def content(self):
-        yield Label("Transferência")
-        yield Input(placeholder="Conta destino", id="conta_destino")
-        yield Input(placeholder="Valor", id="valor")
-        yield Horizontal(
-            Button("Transferir", id="transferir"),
-            Button("Voltar", id="voltar"),
+        yield Vertical(
+            Label("💳 Transferência", id="titulo"),
+            Input(placeholder="Conta destino", id="conta_destino"),
+            Input(placeholder="Valor", id="valor"),
+            Horizontal(
+                Button("Transferir", id="transferir"),
+                Button("Voltar", id="voltar"),
+                id="botoes"
+            ),
+            id="container_principal"
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

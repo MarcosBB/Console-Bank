@@ -1,20 +1,24 @@
 from textual.widgets import Button, Label, Input
 from .base_screen import BaseScreen
-from textual.containers import Horizontal
+from textual.containers import Vertical, Horizontal
 
 class SaqueScreen(BaseScreen):
     def content(self):
-        yield Label("Saque")
-        yield Input(placeholder="Valor", id="valor")
-        yield Horizontal(
-            Button("Sacar", id="sacar"),
-            Button("Voltar", id="voltar"),
+        yield Vertical(
+            Label("💸 Saque", id="titulo"),
+            Input(placeholder="Valor", id="valor"),
+            Horizontal(
+                Button("Sacar", id="sacar"),
+                Button("Voltar", id="voltar"),
+                id="botoes"
+            ),
+            id="container_principal"
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "sacar":
             try:
-                valor = float(self.query_one(Input).value)
+                valor = float(self.query_one("#valor").value)
                 result = self.app.bank.debitar(self.app.current_account, valor)
             except ValueError:
                 self.notify("Valor inválido!", severity="error", timeout=10)

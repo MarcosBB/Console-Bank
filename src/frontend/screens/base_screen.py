@@ -1,7 +1,6 @@
 
 from textual.app import ComposeResult
 from textual.widgets import Footer, Header
-from textual.binding import Binding
 from abc import abstractmethod
 from textual.screen import Screen
 
