@@ -1,5 +1,5 @@
 from textual.widgets import Button, Label
-from textual.containers import VerticalScroll, Horizontal
+from textual.containers import Horizontal
 from .base_screen import BaseScreen
 
 class MainScreen(BaseScreen):
@@ -17,13 +17,6 @@ class MainScreen(BaseScreen):
             Button("Voltar", id="voltar"),
         )
 
-    def on_mount(self):
-        self.atualizar_info()
-
-    def atualizar_info(self):
-        self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
-        self.conta_label.update(f"Conta: {self.app.current_account}")
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         match event.button.id:
             case "depositar":
@@ -35,5 +28,11 @@ class MainScreen(BaseScreen):
             case "voltar":
                 self.app.switch_mode("main")
 
-    def on_show(self):
-        self.atualizar_info()
+    def on_mount(self) -> None:
+        self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
+        self.conta_label.update(f"Conta: {self.app.current_account}")
+
+    def _on_screen_resume(self):
+        self.saldo_label.update(f"Saldo: {self.app.bank.consultar_saldo(self.app.current_account)}")
+        self.conta_label.update(f"Conta: {self.app.current_account}")
+        return super()._on_screen_resume()
