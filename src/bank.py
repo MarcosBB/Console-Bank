@@ -1,12 +1,15 @@
-from src.account import Account
+from src.account import Account, SavingsAccount
 
 
 class Bank:
     def __init__(self):
         self.contas = {}
 
-    def criar_conta(self, numero_conta):
+    def criar_conta(self, numero_conta, tipo="simples"):
         if numero_conta not in self.contas:
+            if tipo == 'poupanca':
+                self.contas[numero_conta] = SavingsAccount(numero_conta)
+                return
             self.contas[numero_conta] = Account(numero_conta)
 
     def creditar(self, numero_conta, valor):
@@ -41,5 +44,10 @@ class Bank:
         if numero_conta in self.contas:
             return self.contas[numero_conta].saldo
         return None
+    
+    def render_juros_poupanca(self, taxa_percentual):
+        for conta in self.contas.values():
+            if isinstance(conta, SavingsAccount):
+                conta.re(taxa_percentual)
 
 
