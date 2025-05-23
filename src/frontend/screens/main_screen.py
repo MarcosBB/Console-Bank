@@ -19,6 +19,7 @@ class MainScreen(BaseScreen):
                 Button("Depositar", id="depositar"),
                 Button("Sacar", id="sacar"),
                 Button("Transferir", id="transferir"),
+                Button("Render Juros", id="render_juros") if self.app.bank.consultar_tipo_conta(self.app.current_account) == "poupanca" else Label(""),
                 Button("Voltar", id="voltar"),
                 id="botoes"
             ),
@@ -33,6 +34,8 @@ class MainScreen(BaseScreen):
                 self.app.switch_mode("saque")
             case "transferir":
                 self.app.switch_mode("transferencia")
+            case "render_juros":
+                self.app.switch_mode("render_juros")
             case "voltar":
                 self.app.switch_mode("login")
 

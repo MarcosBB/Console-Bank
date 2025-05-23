@@ -53,7 +53,11 @@ class Bank:
     def render_juros_poupanca(self, taxa_percentual):
         for conta in self.contas.values():
             if isinstance(conta, SavingsAccount):
-                conta.renderJuros(taxa_percentual)
+                try:
+                    conta.render_juros(taxa_percentual)
+                except Exception as e:
+                    return False
+        return True
 
     def consultar_tipo_conta(self, numero_conta):
         if numero_conta in self.contas:

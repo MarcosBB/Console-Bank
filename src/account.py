@@ -18,7 +18,7 @@ class SavingsAccount(Account):
     def __init__(self, numero):
         super().__init__(numero)
 
-    def renderJuros(self, taxa_percentual):
+    def render_juros(self, taxa_percentual):
         if taxa_percentual < 0:
             raise ValueError("A taxa de juros não pode ser negativa.")
         
