@@ -31,6 +31,7 @@ class Bank:
             or  valor < 0
         ):
             return False
+
         
         if self.contas[conta_origem].saldo >= valor:
             if self.debitar(conta_origem, valor):
@@ -38,11 +39,10 @@ class Bank:
                     return True
                 else:
                     self.creditar(conta_origem, valor)
+
         return False
-    
+
     def consultar_saldo(self, numero_conta):
         if numero_conta in self.contas:
             return self.contas[numero_conta].saldo
         return None
-
-
