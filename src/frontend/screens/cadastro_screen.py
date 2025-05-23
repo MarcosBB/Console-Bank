@@ -1,12 +1,24 @@
 from .base_screen import BaseScreen
-from textual.widgets import Button, Label, Input
+from textual.widgets import Button, Label, Input, Select
 from textual.containers import Vertical, Horizontal
 
 class CadastroScreen(BaseScreen):
+    OPTIONS = [
+        "simples",
+        "poupanca",
+        "bonus",
+    ]
+
     def content(self):
         yield Vertical(
             Label("📝 Cadastro de Conta", id="titulo"),
             Input(placeholder="Número da conta", id="numero_conta"),
+            Select(
+                options=[(option, option) for option in self.OPTIONS],
+                id="tipo_conta",
+                prompt="Selecione o tipo de conta",
+            ),
+
             Horizontal(
                 Button("Cadastrar", id="cadastrar"),
                 Button("Voltar", id="voltar"),
@@ -19,7 +31,8 @@ class CadastroScreen(BaseScreen):
         if event.button.id == "cadastrar":
             try:
                 numero_conta = int(self.query("#numero_conta").first().value)
-                self.app.bank.criar_conta(numero_conta)
+                tipo = self.query("#tipo_conta").first().value
+                self.app.bank.criar_conta(numero_conta, tipo)
                 self.notify("Conta cadastrada com sucesso!", severity="success", timeout=10)
                 self.app.switch_mode("login")
             except ValueError:

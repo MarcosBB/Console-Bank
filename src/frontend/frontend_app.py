@@ -1,6 +1,5 @@
 from textual.app import App
 from textual.binding import Binding
-from ..bank import Bank
 from . import screens
 
 class FrontendApp(App):
@@ -13,6 +12,7 @@ class FrontendApp(App):
         "deposito": screens.DepositoScreen,
         "saque": screens.SaqueScreen,
         "transferencia": screens.TransferenciaScreen,
+        "render_juros": screens.RenderJurosScreen,
         "login": screens.LoginScreen,
         "cadastro": screens.CadastroScreen,
     }
