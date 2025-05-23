@@ -27,6 +27,9 @@ class DepositoScreen(BaseScreen):
             if result:
                 self.app.switch_mode("main")
                 self.notify("Depósito realizado com sucesso!", severity="success", timeout=10)
+            
+            else :
+                self.notify("Erro ao realizar depósito!", severity="error", timeout=10)
 
         elif event.button.id == "voltar":
             self.app.switch_mode("main")

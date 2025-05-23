@@ -54,3 +54,18 @@ class Bank:
         for conta in self.contas.values():
             if isinstance(conta, SavingsAccount):
                 conta.renderJuros(taxa_percentual)
+
+    def consultar_tipo_conta(self, numero_conta):
+        if numero_conta in self.contas:
+            if isinstance(self.contas[numero_conta], BonusAccount):
+                return "bonus"
+            if isinstance(self.contas[numero_conta], SavingsAccount):
+                return "poupanca"
+            return "simples"
+        return None
+
+    def consultar_pontos_bonus(self, numero_conta):
+        if numero_conta in self.contas and self.consultar_tipo_conta(numero_conta) == "bonus":
+            if isinstance(self.contas[numero_conta], BonusAccount):
+                return self.contas[numero_conta].pontos
+        return None
