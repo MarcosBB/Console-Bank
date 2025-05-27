@@ -7,6 +7,7 @@ class CadastroScreen(BaseScreen):
         yield Vertical(
             Label("📝 Cadastro de Conta", id="titulo"),
             Input(placeholder="Número da conta", id="numero_conta"),
+            Input(placeholder="Saldo inicial", id="saldo_inicial", value="0"),
             Horizontal(
                 Button("Cadastrar", id="cadastrar"),
                 Button("Voltar", id="voltar"),
@@ -20,6 +21,7 @@ class CadastroScreen(BaseScreen):
             try:
                 numero_conta = int(self.query("#numero_conta").first().value)
                 self.app.bank.criar_conta(numero_conta)
+                self.app.bank.creditar(numero_conta, float(self.query("#saldo_inicial").first().value))
                 self.notify("Conta cadastrada com sucesso!", severity="success", timeout=10)
                 self.app.switch_mode("login")
             except ValueError:
