@@ -5,15 +5,20 @@ class Bank:
     def __init__(self):
         self.contas = {}
 
-    def criar_conta(self, numero_conta, tipo="simples"):
+    def criar_conta(self, numero_conta, tipo="simples", saldo_inicial=0):
+        if saldo_inicial != 0 and tipo != "poupanca":
+            return False
+
         if numero_conta not in self.contas:
             if tipo == "bonus":
                 self.contas[numero_conta] = BonusAccount(numero_conta)
-                return
-            if tipo == "poupanca":
-                self.contas[numero_conta] = SavingsAccount(numero_conta)
-                return
-            self.contas[numero_conta] = Account(numero_conta)
+            elif tipo == "poupanca":
+                self.contas[numero_conta] = SavingsAccount(numero_conta, saldo_inicial)
+            else:
+                self.contas[numero_conta] = Account(numero_conta)
+            return True
+
+        return False
 
     def creditar(self, numero_conta, valor):
         if numero_conta in self.contas and valor >= 0:

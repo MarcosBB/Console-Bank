@@ -1,7 +1,7 @@
 class Account:
-    def __init__(self, numero):
+    def __init__(self, numero, saldo_inicial=0):
         self.numero = numero
-        self.saldo = 0.0
+        self.saldo = saldo_inicial
         self.limite = 1000.0
 
 
@@ -19,8 +19,8 @@ class BonusAccount(Account):
 
 
 class SavingsAccount(Account):
-    def __init__(self, numero):
-        super().__init__(numero)
+    def __init__(self, numero, saldo_inicial):
+        super().__init__(numero, saldo_inicial)
         self.limite = 0.0
 
     def render_juros(self, taxa_percentual):
