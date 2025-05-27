@@ -26,16 +26,20 @@ class Bank:
         return False
 
     def transferencia(self, conta_origem, conta_destino, valor):
-        if conta_origem not in self.contas or conta_destino not in self.contas:
-            return False
-        if valor < 0:
+        if (conta_origem not in self.contas 
+            or conta_destino not in self.contas
+            or  valor < 0
+        ):
             return False
 
-        if self.debitar(conta_origem, valor):
-            if self.creditar(conta_destino, valor):
-                return True
-            else:
-                self.creditar(conta_origem, valor)
+        
+        if self.contas[conta_origem].saldo >= valor:
+            if self.debitar(conta_origem, valor):
+                if self.creditar(conta_destino, valor):
+                    return True
+                else:
+                    self.creditar(conta_origem, valor)
+
         return False
 
     def consultar_saldo(self, numero_conta):
