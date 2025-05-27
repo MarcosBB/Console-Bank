@@ -1,5 +1,6 @@
 from src.account import Account, BonusAccount, SavingsAccount
 
+
 class Bank:
     def __init__(self):
         self.contas = {}
@@ -9,7 +10,7 @@ class Bank:
             if tipo == "bonus":
                 self.contas[numero_conta] = BonusAccount(numero_conta)
                 return
-            if tipo == 'poupanca':
+            if tipo == "poupanca":
                 self.contas[numero_conta] = SavingsAccount(numero_conta)
                 return
             self.contas[numero_conta] = Account(numero_conta)
@@ -27,7 +28,8 @@ class Bank:
         if (
             numero_conta in self.contas
             and valor >= 0
-            and self.contas[numero_conta].saldo >= valor
+            and self.contas[numero_conta].saldo - valor
+            >= -self.contas[numero_conta].limite
         ):
             self.contas[numero_conta].saldo -= valor
             return True
@@ -53,7 +55,7 @@ class Bank:
         if numero_conta in self.contas:
             return self.contas[numero_conta].saldo
         return None
-    
+
     def render_juros_poupanca(self, taxa_percentual):
         for conta in self.contas.values():
             if isinstance(conta, SavingsAccount):
@@ -73,7 +75,10 @@ class Bank:
         return None
 
     def consultar_pontos_bonus(self, numero_conta):
-        if numero_conta in self.contas and self.consultar_tipo_conta(numero_conta) == "bonus":
+        if (
+            numero_conta in self.contas
+            and self.consultar_tipo_conta(numero_conta) == "bonus"
+        ):
             if isinstance(self.contas[numero_conta], BonusAccount):
                 return self.contas[numero_conta].pontos
         return None
