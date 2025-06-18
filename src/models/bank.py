@@ -1,4 +1,4 @@
-from src.account import Account, BonusAccount, SavingsAccount
+from src.models import Account, BonusAccount, SavingsAccount
 
 
 class Bank:
