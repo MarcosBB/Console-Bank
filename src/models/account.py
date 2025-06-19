@@ -1,7 +1,9 @@
 class Account:
-    def __init__(self, numero):
+    def __init__(self, numero, saldo_inicial=0):
         self.numero = numero
-        self.saldo = 0.0
+        self.saldo = saldo_inicial
+        self.limite = 1000.0
+
 
 
 class BonusAccount(Account):
@@ -16,13 +18,15 @@ class BonusAccount(Account):
         self.pontos += int(valor // 150)
 
 
+
 class SavingsAccount(Account):
-    def __init__(self, numero):
-        super().__init__(numero)
+    def __init__(self, numero, saldo_inicial):
+        super().__init__(numero, saldo_inicial)
+        self.limite = 0.0
 
     def render_juros(self, taxa_percentual):
         if taxa_percentual < 0:
             raise ValueError("A taxa de juros não pode ser negativa.")
 
         juros = self.saldo * (taxa_percentual / 100)
-        self.saldo = juros
+        self.saldo += juros  # CORREÇÃO: era = agora é +=
