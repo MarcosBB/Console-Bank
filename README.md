@@ -43,6 +43,12 @@ git checkout -b feat#01/base-do-projeto
 ```bash
 git commit -m "feat(#código-do-issue): nome da mudança"
 ```
+
+- Para rodar os testes, use o seguinte comando na pasta raiz do projeto:
+```bash
+python -m pytest
+```
+
 ## Equipe de devs
 - [Marcos Beraldo Barros](https://github.com/MarcosBB)
 - [Danrley Araújo de Lima](https://github.com/danrley-lima)
