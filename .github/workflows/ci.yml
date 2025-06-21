@@ -29,7 +29,7 @@ jobs:
           find src -name "*.py" -exec python -m py_compile {} +
 
       - name: 🧪 Rodar testes com Pytest
-        run: pytest --maxfail=1 --disable-warnings -q
+        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q
 
       - name: 🏷️ Criar tag build-<timestamp>
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
