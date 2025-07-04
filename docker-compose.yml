@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  test:
+    build: .
+    command: python -m pytest
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1

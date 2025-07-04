@@ -1,0 +1,85 @@
+name: Trabalho Faculdade - Release Pipeline
+
+on:
+  push:
+    branches: [staging]
+
+permissions:
+  contents: write
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Verificar codigo com flake8
+        run: |
+          echo "Rodando flake8..."
+          flake8 src/ main.py --max-line-length=120 || echo "Aviso: alguns problemas encontrados"
+
+      - name: Rodar testes
+        run: |
+          echo "Executando testes..."
+          python -m pytest src/tests/ -v
+
+      - name: Checar sintaxe
+        run: |
+          echo "Verificando sintaxe..."
+          python -m py_compile main.py
+          find src/ -name "*.py" -exec python -m py_compile {} \;
+
+      - name: Descobrir proxima tag
+        id: tag
+        run: |
+          # Ver qual a ultima tag rc
+          ULTIMA_TAG=$(git tag -l "rc-*" | sort -V | tail -n 1)
+          
+          if [ -z "$ULTIMA_TAG" ]; then
+            NOVA_TAG="rc-1.0"
+          else
+            # Pegar o numero da tag e somar 1
+            NUMERO=$(echo $ULTIMA_TAG | sed 's/rc-1\.//')
+            NOVO_NUMERO=$((NUMERO + 1))
+            NOVA_TAG="rc-1.${NOVO_NUMERO}"
+          fi
+          
+          echo "tag_anterior=$ULTIMA_TAG" >> $GITHUB_OUTPUT
+          echo "nova_tag=$NOVA_TAG" >> $GITHUB_OUTPUT
+          echo "Proxima tag sera: $NOVA_TAG"
+
+      - name: Fazer pacote do sistema
+        run: |
+          echo "Criando pacote..."
+          mkdir pacote
+          cp -r src/ pacote/
+          cp main.py requirements.txt README.md pacote/
+          echo "${{ steps.tag.outputs.nova_tag }}" > pacote/versao.txt
+          cd pacote && zip -r "../${{ steps.tag.outputs.nova_tag }}.zip" . && cd ..
+
+      - name: Criar tag no git
+        run: |
+          git config user.name "Aluno Faculdade"
+          git config user.email "aluno@faculdade.com"
+          git tag ${{ steps.tag.outputs.nova_tag }}
+          git push origin ${{ steps.tag.outputs.nova_tag }}
+
+      - name: Subir arquivo para download
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.tag.outputs.nova_tag }}
+          path: ${{ steps.tag.outputs.nova_tag }}.zip
