@@ -13,12 +13,12 @@ jobs:
     
     steps:
       - name: Baixar codigo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Configurar Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -79,7 +79,7 @@ jobs:
           git push origin ${{ steps.tag.outputs.nova_tag }}
 
       - name: Subir arquivo para download
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.tag.outputs.nova_tag }}
           path: ${{ steps.tag.outputs.nova_tag }}.zip
