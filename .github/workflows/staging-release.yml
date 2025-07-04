@@ -1,4 +1,4 @@
-name: Trabalho Faculdade - Release Pipeline
+name: Release Pipeline
 
 on:
   push:
@@ -13,12 +13,12 @@ jobs:
     
     steps:
       - name: Baixar codigo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Configurar Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -73,13 +73,15 @@ jobs:
 
       - name: Criar tag no git
         run: |
-          git config user.name "Aluno Faculdade"
-          git config user.email "aluno@faculdade.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
           git tag ${{ steps.tag.outputs.nova_tag }}
           git push origin ${{ steps.tag.outputs.nova_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Subir arquivo para download
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.tag.outputs.nova_tag }}
           path: ${{ steps.tag.outputs.nova_tag }}.zip
