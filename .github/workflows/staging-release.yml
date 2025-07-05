@@ -29,47 +29,48 @@ jobs:
 
       - name: Verificar codigo com flake8
         run: |
-          echo "Rodando flake8..."
-          flake8 src/ main.py --max-line-length=120 || echo "Aviso: alguns problemas encontrados"
+          flake8 src/ main.py --max-line-length=120 || true
 
       - name: Rodar testes
         run: |
-          echo "Executando testes..."
           python -m pytest src/tests/ -v
 
       - name: Checar sintaxe
         run: |
-          echo "Verificando sintaxe..."
           python -m py_compile main.py
           find src/ -name "*.py" -exec python -m py_compile {} \;
 
       - name: Descobrir proxima tag
         id: tag
         run: |
-          # Ver qual a ultima tag rc
-          ULTIMA_TAG=$(git tag -l "rc-*" | sort -V | tail -n 1)
+          # Ver qual a ultima tag rc no formato rc-X.Y (conforme especificação)
+          ULTIMA_TAG=$(git tag -l "rc-*.*" | grep -E "^rc-[0-9]+\.[0-9]+$" | sort -V | tail -n 1)
           
           if [ -z "$ULTIMA_TAG" ]; then
             NOVA_TAG="rc-1.0"
           else
-            # Pegar o numero da tag e somar 1
-            NUMERO=$(echo $ULTIMA_TAG | sed 's/rc-1\.//')
-            NOVO_NUMERO=$((NUMERO + 1))
-            NOVA_TAG="rc-1.${NOVO_NUMERO}"
+            # Extrair X e Y da tag rc-X.Y
+            X=$(echo $ULTIMA_TAG | sed 's/rc-\([0-9]*\)\.\([0-9]*\)/\1/')
+            Y=$(echo $ULTIMA_TAG | sed 's/rc-\([0-9]*\)\.\([0-9]*\)/\2/')
+            
+            # Incrementar Y em 1 (ex: rc-2.3 → rc-2.4)
+            NOVO_Y=$((Y + 1))
+            NOVA_TAG="rc-${X}.${NOVO_Y}"
           fi
           
           echo "tag_anterior=$ULTIMA_TAG" >> $GITHUB_OUTPUT
           echo "nova_tag=$NOVA_TAG" >> $GITHUB_OUTPUT
-          echo "Proxima tag sera: $NOVA_TAG"
 
-      - name: Fazer pacote do sistema
+      - name: Criar zip do sistema
         run: |
-          echo "Criando pacote..."
-          mkdir pacote
-          cp -r src/ pacote/
-          cp main.py requirements.txt README.md pacote/
-          echo "${{ steps.tag.outputs.nova_tag }}" > pacote/versao.txt
-          cd pacote && zip -r "../${{ steps.tag.outputs.nova_tag }}.zip" . && cd ..
+          mkdir release
+          cp -r src/ release/
+          cp main.py requirements.txt README.md release/
+          echo "${{ steps.tag.outputs.nova_tag }}" > release/versao.txt
+          cd release
+          zip -r "../${{ steps.tag.outputs.nova_tag }}.zip" .
+          cd ..
+          ls *.zip
 
       - name: Criar tag no git
         run: |
@@ -85,3 +86,4 @@ jobs:
         with:
           name: ${{ steps.tag.outputs.nova_tag }}
           path: ${{ steps.tag.outputs.nova_tag }}.zip
+          if-no-files-found: error
