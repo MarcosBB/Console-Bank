@@ -51,7 +51,7 @@ coverage.xml
 .pytest_cache/
  
 *.zip
-pacote/
+release/
 
 # Translations
 *.mo
