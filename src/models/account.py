@@ -5,6 +5,7 @@ class Account:
         self.limite = 1000.0
 
 
+
 class BonusAccount(Account):
     def __init__(self, numero):
         super().__init__(numero)
@@ -14,7 +15,8 @@ class BonusAccount(Account):
         self.pontos += int(valor // 100)
 
     def adicionar_pontos_transferencia_recebida(self, valor):
-        self.pontos += int(valor // 200)
+        self.pontos += int(valor // 150)
+
 
 
 class SavingsAccount(Account):

@@ -2,6 +2,7 @@ from .base_screen import BaseScreen
 from textual.widgets import Button, Label, Input, Select
 from textual.containers import Vertical, Horizontal
 
+
 class CadastroScreen(BaseScreen):
     OPTIONS = [
         "simples",
@@ -13,22 +14,18 @@ class CadastroScreen(BaseScreen):
         yield Vertical(
             Label("📝 Cadastro de Conta", id="titulo"),
             Input(placeholder="Número da conta", id="numero_conta"),
-            Input(
-                placeholder="Saldo inicial (apenas para conta poupança)",
-                id="saldo_inicial",
-            ),
+            Input(placeholder="Saldo inicial", id="saldo_inicial", value="0"),
             Select(
                 options=[(option, option) for option in self.OPTIONS],
                 id="tipo_conta",
                 prompt="Selecione o tipo de conta",
             ),
-
             Horizontal(
                 Button("Cadastrar", id="cadastrar"),
                 Button("Voltar", id="voltar"),
-                id="botoes"
+                id="botoes",
             ),
-            id="container_principal"
+            id="container_principal",
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

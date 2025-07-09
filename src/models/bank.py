@@ -1,6 +1,7 @@
 from src.models import Account, BonusAccount, SavingsAccount
 
 
+
 class Bank:
     def __init__(self):
         self.contas = {}
@@ -41,9 +42,11 @@ class Bank:
         return False
 
     def transferencia(self, conta_origem, conta_destino, valor):
-        if conta_origem not in self.contas or conta_destino not in self.contas:
-            return False
-        if valor < 0:
+        if (
+            conta_origem not in self.contas
+            or conta_destino not in self.contas
+            or valor < 0
+        ):
             return False
 
         if self.debitar(conta_origem, valor):
