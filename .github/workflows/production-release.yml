@@ -33,7 +33,7 @@ jobs:
 
       - name: Rodar testes
         run: |
-          pytest
+          python -m pytest
 
       - name: Descobrir tag de release
         id: get_version
