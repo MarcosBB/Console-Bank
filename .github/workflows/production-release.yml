@@ -41,10 +41,30 @@ jobs:
           ULTIMA_TAG_RC=$(git tag --list 'rc-*' | sort -V | tail -n 1)
           
           if [[ -z "$ULTIMA_TAG_RC" ]]; then
-            NOVA_TAG="rel-1.0"
+            echo "Nenhuma tag 'rc' encontrada. Verificando última tag 'rel'..."
+            ULTIMA_TAG_REL=$(git tag --list 'rel-*' | sort -V | tail -n 1)
+            
+            if [[ -z "$ULTIMA_TAG_REL" ]]; then
+              NOVA_TAG="rel-1.0"
+            else
+              # Incrementar a partir da última tag rel
+              VERSAO_ATUAL=$(echo $ULTIMA_TAG_REL | cut -d'-' -f2 | cut -d'.' -f1)
+              NOVA_VERSAO=$((VERSAO_ATUAL + 1))
+              NOVA_TAG="rel-${NOVA_VERSAO}.0"
+            fi
           else
+            # Usar versão baseada na tag rc
             VERSAO_PRINCIPAL=$(echo $ULTIMA_TAG_RC | cut -d'-' -f2 | cut -d'.' -f1)
-            NOVA_TAG="rel-${VERSAO_PRINCIPAL}.0"
+            CANDIDATA="rel-${VERSAO_PRINCIPAL}.0"
+            
+            # Verificar se a tag candidata já existe
+            if git tag -l | grep -q "^$CANDIDATA$"; then
+              echo "Tag $CANDIDATA já existe. Incrementando versão..."
+              NOVA_VERSAO=$((VERSAO_PRINCIPAL + 1))
+              NOVA_TAG="rel-${NOVA_VERSAO}.0"
+            else
+              NOVA_TAG="$CANDIDATA"
+            fi
           fi
           
           echo "Tag de release: $NOVA_TAG"
@@ -53,10 +73,18 @@ jobs:
       - name: Criar tag no git
         run: |
           NOVA_TAG=${{ steps.get_version.outputs.tag }}
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git tag $NOVA_TAG
-          git push origin $NOVA_TAG
+          echo "Verificando se a tag $NOVA_TAG já existe..."
+          
+          if git tag -l | grep -q "^$NOVA_TAG$"; then
+            echo "Tag $NOVA_TAG já existe. Pulando criação."
+          else
+            echo "Criando nova tag: $NOVA_TAG"
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git tag $NOVA_TAG
+            git push origin $NOVA_TAG
+            echo "Tag $NOVA_TAG criada com sucesso!"
+          fi
 
       - name: Criar zip do sistema
         run: |
@@ -74,7 +102,7 @@ jobs:
       - name: Login no Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: marcosbb
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build e push da imagem
@@ -83,4 +111,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME || 'your-dockerhub-username' }}/console-bank-api:${{ steps.get_version.outputs.tag }}
+          tags: |
+            marcosbb/console-bank-api:${{ steps.get_version.outputs.tag }}
+            marcosbb/console-bank-api:latest
+
+      - name: Verificar imagem publicada
+        run: |
+          echo "Imagem publicada com sucesso!"
+          echo "Tag: marcosbb/console-bank-api:${{ steps.get_version.outputs.tag }}"
+          echo "Tag: marcosbb/console-bank-api:latest"
+          echo "Para usar: docker run -p 8080:8080 marcosbb/console-bank-api:${{ steps.get_version.outputs.tag }}"
