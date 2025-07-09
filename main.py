@@ -1,3 +1,4 @@
+import os
 from src.api.api_rest import BankAPI
 from src.models.bank import Bank
 from src.services.BankService import BankService
@@ -21,8 +22,8 @@ def main():
     banco = setup_banco()
     service = BankService(banco)
 
-    host = "127.0.0.1"
-    port = 3000
+    host = os.environ.get("APP_HOST", "0.0.0.0")
+    port = int(os.environ.get("APP_PORT", 8080))
 
     print(f"API rodando em http://{host}:{port}")
 
