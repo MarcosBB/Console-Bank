@@ -1,0 +1,41 @@
+name: CI - Build, Test and Tag
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build-test-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout do código
+        uses: actions/checkout@v3
+
+      - name: 🐳 Build docker
+        run: docker compose build
+
+      - name: ✅ Checagem de sintaxe
+        run: docker compose run --rm api find . -name "*.py" -exec python -m py_compile {} +
+
+      - name: 🧪 Rodar testes
+        run: docker compose run --rm test
+
+
+
+      - name: 🏷️ Criar tag build-<timestamp>
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          TAG="build-${TIMESTAMP}"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
