@@ -5,7 +5,7 @@ class BankService:
     def __init__(self, banco):
         self.banco = banco
 
-    def cadastrar_conta:
+    def cadastrar_conta(self, tipo, numero, dados):
         saldo_inicial = dados.get("saldo_inicial", 0)
 
         if tipo.lower() == "bonus":
