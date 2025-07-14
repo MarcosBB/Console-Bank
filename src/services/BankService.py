@@ -60,7 +60,7 @@ class BankService:
         return {"numero": numero, "saldo": saldo}
 
     def creditar(self, numero, valor):
-        result = True
+        result = self.banco.creditar(numero, valor)
         if result:
             return {"sucesso": True, "numero": numero, "valor": valor}
         return {"erro": "Erro ao creditar"}
