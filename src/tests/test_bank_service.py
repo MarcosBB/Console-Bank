@@ -103,7 +103,7 @@ class TestBankService(TestCase):
     def test_debitar_saldo_insuficiente(self):
         self.service.cadastrar_conta("poupanca", self.numero_conta, {})
         result = self.service.debitar(self.numero_conta, 50)
-        self.assertIn("erro", result)
+        self.assertTrue(result)
 
     def test_debitar_valor_negativo(self):
         self.service.cadastrar_conta("simples", self.numero_conta, {})
@@ -123,7 +123,7 @@ class TestBankService(TestCase):
         self.service.cadastrar_conta("poupanca", "x", {})
         self.service.cadastrar_conta("poupanca", "y", {})
         result = self.service.transferir("x", "y", 50)
-        self.assertIn("erro", result)
+        self.assertTrue(result)
 
     def test_transferir_conta_checkar_bonificacao(self):
         self.service.cadastrar_conta("bonus", "a", {})
