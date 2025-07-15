@@ -31,12 +31,7 @@ class Bank:
         return False
 
     def debitar(self, numero_conta, valor):
-        if (
-            numero_conta in self.contas
-            and valor >= 0
-            and self.contas[numero_conta].saldo - valor
-            >= -self.contas[numero_conta].limite
-        ):
+        if numero_conta in self.contas and valor >= 0:
             self.contas[numero_conta].saldo -= valor
             return True
         return False
